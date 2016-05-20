@@ -18,14 +18,14 @@ public class Category extends Model {
 
 
     @Id
-    public Long id;
+    private Long id;
 
     @Constraints.Required
-    public String name;
+    private String name;
 
     // Category contains many products
     @ManyToMany(cascade = CascadeType.ALL)
-    public List<Product> products; // = new ArrayList<Product>();
+    private List<Product> products; // = new ArrayList<Product>();
 
     // Default constructor
     public  Category() {
@@ -61,7 +61,30 @@ public class Category extends Model {
             .eq("products.id", product)
             .eq("id", category)
             .findRowCount() > 0;
-    } 
-	
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 }
 

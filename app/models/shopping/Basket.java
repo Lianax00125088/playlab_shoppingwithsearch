@@ -1,12 +1,9 @@
 package models.shopping;
 
-import java.util.*;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.*;
-import play.data.format.*;
-import play.data.validation.*;
 
 import com.avaje.ebean.*;
 
@@ -19,13 +16,13 @@ import models.users.*;
 public class Basket extends Model {
 
     @Id
-    public Long id;
+    private Long id;
     
-    @OneToMany(mappedBy = "basket", cascade = CascadeType.PERSIST)  
-    public List<OrderItem> basketItems;
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.PERSIST)
+    private List<OrderItem> basketItems;
     
     @OneToOne
-    public Customer customer;
+    private Customer customer;
 
     // Default constructor
     public  Basket() {
@@ -41,7 +38,7 @@ public class Basket extends Model {
         // Find orderitem with this product
         // if found increment quantity
         for (OrderItem i : basketItems) {
-            if (i.product.id == p.id) {
+            if (i.getProduct().getId() == p.getId()) {
                 i.increaseQty();
                 itemFound = true;
                 break;
@@ -62,10 +59,10 @@ public class Basket extends Model {
         // iterator works with an object reference which does not change
         for (Iterator<OrderItem> iter = basketItems.iterator(); iter.hasNext();) {
             OrderItem i = iter.next();
-            if (i.id.equals(item.id))
+            if (i.getId().equals(item.getId()))
             {
                 // If more than one of these items in the basket then decrement
-                if (i.quantity > 1 ) {
+                if (i.getQuantity() > 1 ) {
                     i.decreaseQty();
                 }
                 // If only one left, remove this item from the basket (via the iterator)
@@ -104,6 +101,30 @@ public class Basket extends Model {
     public static List<Basket> findAll() {
         return Basket.find.all();
     }
-	
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<OrderItem> getBasketItems() {
+        return basketItems;
+    }
+
+    public void setBasketItems(List<OrderItem> basketItems) {
+        this.basketItems = basketItems;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
 

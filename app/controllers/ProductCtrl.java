@@ -3,6 +3,7 @@ package controllers;
 import play.api.Environment;
 import play.mvc.*;
 import play.data.*;
+import play.db.ebean.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +34,12 @@ public class ProductCtrl extends Controller {
     }
 
     // Get a user - if logged in email will be set in the session
+    @Transactional
 	public User getCurrentUser() {
 		User u = User.getLoggedIn(session().get("email"));
 		return u;
 	}
-    	    
+
     public Result index() {
 		return redirect(routes.ProductCtrl.listProducts(0, ""));
     }
@@ -46,6 +48,7 @@ public class ProductCtrl extends Controller {
     // If cat parameter is 0 then return all products
     // Otherwise return products for a category (by id)
     // In both cases products will be searched using the fiter value
+    @Transactional
     public Result listProducts(Long cat, String filter) {
         // Get list of all categories in ascending order
         List<Category> categories = Category.findAll();

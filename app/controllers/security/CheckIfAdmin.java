@@ -24,7 +24,7 @@ public class CheckIfAdmin extends Action.Simple {
         String id = ctx.session().get("email");
         if (id != null) {
             User u = User.getLoggedIn(id);
-            if ("admin".equals(u.role)) {
+            if ("admin".equals(u.getRole())) {
                 
                 // User admin sp continue with the http request
                 return delegate.call(ctx);

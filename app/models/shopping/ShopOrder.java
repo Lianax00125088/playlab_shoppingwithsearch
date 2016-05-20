@@ -17,19 +17,19 @@ import models.users.*;
 public class ShopOrder extends Model {
 
     @Id
-    public Long id;
+    private Long id;
     
-    public Date OrderDate;
+    private Date OrderDate;
     
     // Order contains may items.
     // mappedBy makes this side of the mapping the owner
     // so foreign key will be placed in resulting OrderItem table
     // All changes, including deletes will be cascaded
     @OneToMany(mappedBy="order", cascade = CascadeType.ALL)
-    public List<OrderItem> items;
+    private List<OrderItem> items;
     
     @ManyToOne
-    public Customer customer;
+    private Customer customer;
 
     // Default constructor
     public  ShopOrder() {
@@ -53,6 +53,37 @@ public class ShopOrder extends Model {
     public static List<ShopOrder> findAll() {
         return ShopOrder.find.all();
     }
-	
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getOrderDate() {
+        return OrderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        OrderDate = orderDate;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
 

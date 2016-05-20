@@ -24,7 +24,7 @@ public class CheckIfCustomer extends Action.Simple {
         String id = ctx.session().get("email");
         if (id != null) {
             User u = User.getLoggedIn(id);
-            if ("customer".equals(u.role)) {
+            if ("customer".equals(u.getRole())) {
 
                 // User admin sp continue with the http request
                 return delegate.call(ctx);

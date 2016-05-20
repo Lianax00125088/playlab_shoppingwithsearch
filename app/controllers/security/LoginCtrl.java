@@ -2,6 +2,7 @@ package controllers.security;
 
 import play.mvc.*;
 import play.data.*;
+import play.db.ebean.Transactional;
 
 // Import required classes
 import javax.inject.Inject;
@@ -21,13 +22,14 @@ public class LoginCtrl extends Controller {
         this.formFactory = f;
     }
 
-
+    @Transactional
     public Result login() {
 	   // Pass a login form to the login view and render
 	   return ok(login.render(formFactory.form(Login.class), User.getLoggedIn(session().get("email"))));
     }
 
     // Process the user login form
+    @Transactional
     public Result loginSubmit() {
         // Bind form instance to the values submitted from the form  
         Form<Login> loginForm = formFactory.form(Login.class).bindFromRequest();
@@ -43,12 +45,12 @@ public class LoginCtrl extends Controller {
             // Clear the existing session
             session().clear();
             // Store the logged in email in the session
-            session("email", loginForm.get().email);
+            session("email", loginForm.get().getEmail());
             
             // Check user type
-            User u = User.getLoggedIn(loginForm.get().email);
+            User u = User.getLoggedIn(loginForm.get().getEmail());
             // If admin - go to admin section
-            if (u != null && "admin".equals(u.role)) {
+            if (u != null && "admin".equals(u.getRole())) {
                 return redirect(controllers.routes.AdminProductCtrl.index());
             }
             
@@ -56,12 +58,10 @@ public class LoginCtrl extends Controller {
             return redirect(controllers.routes.ProductCtrl.index());
         }
     }	
-
+    @Transactional
     public Result logout() {
         session().clear();
         flash("success", "You've been logged out");
-        return redirect(
-            routes.LoginCtrl.login()
-        );
+        return redirect(routes.LoginCtrl.login());
     }
 }

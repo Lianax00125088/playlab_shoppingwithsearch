@@ -16,21 +16,21 @@ import models.users.*;
 public class OrderItem extends Model {
 
     @Id
-    public Long id;
+    private Long id;
 
     @ManyToOne
-    public ShopOrder order;
+    private ShopOrder order;
     
     @ManyToOne
-    public Basket basket;
+    private Basket basket;
     
     // Unidirection mapping - Many order items can have one product
     // Product not interested in this
     @ManyToOne
-    public Product product;
+    private Product product;
     
-    public int quantity;
-    public double price;
+    private int quantity;
+    private double price;
 
     // Default constructor
     public  OrderItem() {
@@ -39,7 +39,7 @@ public class OrderItem extends Model {
     public OrderItem(Product p) {
             product = p;
             quantity = 1;
-            price = p.price;
+            price = p.getPrice();
     }
     
     // Increment quantity
@@ -64,6 +64,53 @@ public class OrderItem extends Model {
     public static List<OrderItem> findAll() {
         return OrderItem.find.all();
     }
-	
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ShopOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(ShopOrder order) {
+        this.order = order;
+    }
+
+    public Basket getBasket() {
+        return basket;
+    }
+
+    public void setBasket(Basket basket) {
+        this.basket = basket;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }
 

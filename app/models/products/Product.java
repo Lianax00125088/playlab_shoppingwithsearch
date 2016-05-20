@@ -18,29 +18,29 @@ public class Product extends Model {
     // During compile time, The Play Framework
     // automatically generates getters and setters
     @Id
-    public Long id;
+    private Long id;
 
     // many to many mapping
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "products")
-    public List<Category> categories; //= new ArrayList<Category>();
-    
+    private List<Category> categories = new ArrayList<Category>();
+
     //@OneToOne(mappedBy="product")
     //public OrderItem item = new OrderItem();
     
     // List of category ids - this will be bound to checkboxes in the view form
-    public List<Long> catSelect = new ArrayList<Long>();
+    private List<Long> catSelect = new ArrayList<Long>();
 
     @Constraints.Required
-    public String name;
+    private String name;
 
     @Constraints.Required
-    public String description;
+    private String description;
 
     @Constraints.Required
-    public int	stock;
+    private int	stock;
 
     @Constraints.Required
-    public double price;
+    private double price;
 
     // Default constructor
     public  Product() {
@@ -80,6 +80,61 @@ public class Product extends Model {
                         .orderBy("name asc")
                         .findList();
     }
-	
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public List<Long> getCatSelect() {
+        return catSelect;
+    }
+
+    public void setCatSelect(List<Long> catSelect) {
+        this.catSelect = catSelect;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }
 

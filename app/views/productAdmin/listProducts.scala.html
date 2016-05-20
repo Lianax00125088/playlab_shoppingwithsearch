@@ -15,7 +15,7 @@
 				<!-- Start of For loop - For each c in categories add a link -->
 				<a href="@routes.AdminProductCtrl.listProducts(0)" class="list-group-item">All categories</a>
 				@for(c <- categories) {
-          <a href="@routes.AdminProductCtrl.listProducts(c.id)" class="list-group-item">@c.name</a>
+          <a href="@routes.AdminProductCtrl.listProducts(c.getId)" class="list-group-item">@c.getName</a>
 				}
       </div>
   </div>
@@ -44,25 +44,25 @@
 				@for(p <- products) {
 				<tr>
 					<!-- Display each product field value in a column -->
-					@if(env.resource("public/images/productImages/thumbnails/" + p.id + ".jpg").isDefined) {
-						<td><img src="/assets/images/productImages/thumbnails/@(p.id).jpg"/></td>
+					@if(env.resource("public/images/productImages/thumbnails/" + p.getId + ".jpg").isDefined) {
+						<td><img src="/assets/images/productImages/thumbnails/@(p.getId).jpg"/></td>
 					} else {
 						<td><img src="/assets/images/productImages/thumbnails/noImage.png"/></td>
 					}
-					<td>@p.id</td>
-					<td>@p.name</td>
-					<td>@p.description</td>
-					<td>@p.stock</td>
-					<td>&euro; @("%.2f".format(p.price))</td>
+					<td>@p.getId</td>
+					<td>@p.getName</td>
+					<td>@p.getDescription</td>
+					<td>@p.getStock</td>
+					<td>&euro; @("%.2f".format(p.getPrice))</td>
 					<!-- Edit product button -->
 					@if(user != null) {
 					<td>
-						<a href="@routes.AdminProductCtrl.updateProduct(p.id)" class="btn-xs btn-danger">
+						<a href="@routes.AdminProductCtrl.updateProduct(p.getId)" class="btn-xs btn-danger">
 						<span class="glyphicon glyphicon-pencil"></span></a>
 					</td>
 					<!-- Delete product button -->
 					<td>
-						<a href="@routes.AdminProductCtrl.deleteProduct(p.id)" class="btn-xs btn-danger" 
+						<a href="@routes.AdminProductCtrl.deleteProduct(p.getId)" class="btn-xs btn-danger"
 						onclick="return confirmDel();">
 						<span class="glyphicon glyphicon-trash"></span></a>
 					</td>

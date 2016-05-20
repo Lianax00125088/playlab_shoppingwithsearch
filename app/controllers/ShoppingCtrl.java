@@ -3,6 +3,7 @@ package controllers;
 import play.mvc.*;
 
 import views.html.*;
+import play.db.ebean.Transactional;
 
 // Import models
 import models.users.*;
@@ -23,12 +24,14 @@ public class ShoppingCtrl extends Controller {
 	private Customer getCurrentUser() {
 		return (Customer)User.getLoggedIn(session().get("email"));
 	}
-    
+
+    @Transactional
     public Result showBasket() {
         return ok(basket.render(getCurrentUser()));
     }
     
     // Add item to customer basket
+    @Transactional
     public Result addToBasket(Long id) {
         
         // Find the product
@@ -38,14 +41,14 @@ public class ShoppingCtrl extends Controller {
         Customer customer = (Customer)User.getLoggedIn(session().get("email"));
         
         // Check if item in basket
-        if (customer.basket == null) {
+        if (customer.getBasket() == null) {
             // If no basket, create one
-            customer.basket = new Basket();
-            customer.basket.customer = customer;
+            customer.setBasket(new Basket());
+            customer.getBasket().setCustomer(customer);
             customer.update();
         }
         // Add product to the basket and save
-        customer.basket.addProduct(p);
+        customer.getBasket().addProduct(p);
         customer.update();
         
         // Show the basket contents     
@@ -53,6 +56,7 @@ public class ShoppingCtrl extends Controller {
     }
     
     // Add an item to the basket
+    @Transactional
     public Result addOne(Long itemId) {
         
         // Get the order item
@@ -64,7 +68,8 @@ public class ShoppingCtrl extends Controller {
         // Show updated basket
         return redirect(routes.ShoppingCtrl.showBasket());
     }
-    
+
+    @Transactional
     public Result removeOne(Long itemId) {
         
         // Get the order item
@@ -72,22 +77,24 @@ public class ShoppingCtrl extends Controller {
         // Get user
         Customer c = getCurrentUser();
         // Call basket remove item method
-        c.basket.removeItem(item);
-        c.basket.update();
+        c.getBasket().removeItem(item);
+        c.getBasket().update();
         // back to basket
         return ok(basket.render(c));
     }
 
     // Empty Basket
+    @Transactional
     public Result emptyBasket() {
         
         Customer c = getCurrentUser();
-        c.basket.removeAllItems();
-        c.basket.update();
+        c.getBasket().removeAllItems();
+        c.getBasket().update();
         
         return ok(basket.render(c));
     }
-    
+
+    @Transactional
     public Result placeOrder() {
         Customer c = getCurrentUser();
         
@@ -95,20 +102,20 @@ public class ShoppingCtrl extends Controller {
         ShopOrder order = new ShopOrder();
         
         // Associate order with customer
-        order.customer = c;
+        order.setCustomer(c);
         
         // Copy basket to order
-        order.items = c.basket.basketItems;
+        order.setItems(c.getBasket().getBasketItems());
         
         // Save the order now to generate a new id for this order
         order.save();
        
        // Move items from basket to order
-        for (OrderItem i: order.items) {
+        for (OrderItem i: order.getItems()) {
             // Associate with order
-            i.order = order;
+            i.setOrder(order);
             // Remove from basket
-            i.basket = null;
+            i.setBasket(null);
             // update item
             i.update();
         }
@@ -117,14 +124,15 @@ public class ShoppingCtrl extends Controller {
         order.update();
         
         // Clear and update the shopping basket
-        c.basket.basketItems = null;
-        c.basket.update();
+        c.getBasket().setBasketItems(null);
+        c.getBasket().update();
         
         // Show order confirmed view
         return ok(orderConfirmed.render(c, order));
     }
     
     // View an individual order
+    @Transactional
     public Result viewOrder(long id) {
         ShopOrder order = ShopOrder.find.byId(id);
         return ok(orderConfirmed.render(getCurrentUser(), order));

@@ -32,17 +32,17 @@
 			</tr>
 			</thead>
 			<tbody>
-                @if(customer.basket != null) {
+                @if(customer.getBasket() != null) {
                     <!-- Start of For loop - For each p in products add a row -->
-                    @for(i <- customer.basket.basketItems) {
+                    @for(i <- customer.getBasket().getBasketItems()) {
                     <tr>
-                        <td>@i.product.name</td>
-                        <td>@i.product.description</td>
-                        <td>&euro; @("%.2f".format(i.price))</td>
-                        <td>&euro; @("%.2f".format(i.getItemTotal()))</td>
-                        <td>@i.quantity</td>
-                        <td><a href="@routes.ShoppingCtrl.removeOne(i.id)"><span class="glyphicon glyphicon-minus-sign"></span></a></td>	
-                        <td><a href="@routes.ShoppingCtrl.addOne(i.id)"><span class="glyphicon glyphicon-plus-sign"></span></a></td>			
+                        <td>@i.getProduct.getName</td>
+                        <td>@i.getProduct.getDescription()</td>
+                        <td>&euro; @("%.2f".format(i.getPrice))</td>
+                        <td>&euro; @("%.2f".format(i.getItemTotal))</td>
+                        <td>@i.getQuantity()</td>
+                        <td><a href="@routes.ShoppingCtrl.removeOne(i.getId)"><span class="glyphicon glyphicon-minus-sign"></span></a></td>
+                        <td><a href="@routes.ShoppingCtrl.addOne(i.getId)"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
                     </tr>
                     }<!-- End of For loop -->
               }
@@ -50,7 +50,7 @@
 		</table>
         <div class="row">
             <div class="col-md-12">
-                <p class="text-right"><strong>Basket Total: &euro; @("%.2f".format(customer.basket.getBasketTotal()))</strong></p>
+                <p class="text-right"><strong>Basket Total: &euro; @("%.2f".format(customer.getBasket.getBasketTotal))</strong></p>
             </div>  
         </div>
         <div class="row">
@@ -67,8 +67,7 @@
                 </p>
             </div>  
         </div>
-        </div>
-	</div>
+    </div>
 </div>
 
 <script>

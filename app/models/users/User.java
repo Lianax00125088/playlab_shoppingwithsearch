@@ -27,16 +27,16 @@ public class User extends Model {
 	
 	@Constraints.Required
     @Id
-    public String email;
+    private String email;
 
     @Column(insertable=false, updatable=false)
-    public String role;
+    private String role;
 
     @Constraints.Required
-    public String name;
+    private String name;
 
     @Constraints.Required
-    public String password;
+    private String password;
 
 
     // Default constructor
@@ -68,16 +68,38 @@ public class User extends Model {
             // Find user by id and return object
             return find.byId(id);
     }
-		
-    // Get the user type - from the discriminator value
-    // http://stackoverflow.com/questions/3005383/how-to-get-the-discriminatorvalue-at-run-time
-    // http://stackoverflow.com/questions/541749/how-to-determine-an-objects-class-in-java
- /*   @Transient
-    public String getUserType(){
-        DiscriminatorValue val = this.getClass().getAnnotation( DiscriminatorValue.class );
-        return val == null ? null : val.value();
+
+    public String getEmail() {
+        return email;
     }
-    */
-        
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
 

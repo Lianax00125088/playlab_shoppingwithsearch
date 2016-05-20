@@ -14,7 +14,7 @@ import com.avaje.ebean.*;
 // Manager inherits from the User class
 public class Manager extends User {
 	
-	public String department;
+	private String department;
 
 	public Manager() {
 
@@ -24,5 +24,12 @@ public class Manager extends User {
 		super(email, role, name, password);
 		this.department = department;
 	}
-	
-} 
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+}

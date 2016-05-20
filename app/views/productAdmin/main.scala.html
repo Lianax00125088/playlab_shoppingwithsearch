@@ -49,7 +49,7 @@
 					<!-- Login/ logout Link - check if user logged in -->
                     <li>
 						@if(user != null) {
-						  <a href="@controllers.security.routes.LoginCtrl.logout()">Logout @user.name</a>
+						  <a href="@controllers.security.routes.LoginCtrl.logout()">Logout @user.getName</a>
 						} else {
                       	  <a href="@controllers.security.routes.LoginCtrl.login()">Login</a>
 						}

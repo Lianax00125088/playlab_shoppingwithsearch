@@ -4,6 +4,7 @@ import controllers.security.*;
 
 import play.mvc.*;
 import play.data.*;
+import play.db.ebean.Transactional;
 import play.api.Environment;
 
 import play.mvc.Http.*;
@@ -16,7 +17,6 @@ import javax.inject.Inject;
 import play.Logger;
 
 // File upload and image editing dependencies
-import org.im4java.process.ProcessStarter;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
 
@@ -65,12 +65,13 @@ public class AdminProductCtrl extends Controller {
 	}
     
     public Result index() {
-        return redirect(routes.AdminProductCtrl.listProducts(0));
+        return redirect(controllers.routes.AdminProductCtrl.listProducts(0));
     }
 
 	// Get a list of products
     // If cat parameter is 0 then return all products
     // Otherwise return products for a category (by id)
+    @Transactional
     public Result listProducts(Long cat) {
         // Get list of categories in ascending order
         List<Category> categories = Category.find.where().orderBy("name asc").findList();
@@ -93,6 +94,7 @@ public class AdminProductCtrl extends Controller {
     
     // Load the add product view
     // Display an empty form in the view
+    @Transactional
     public Result addProduct() {   
         // Instantiate a form object based on the Product class
         Form<Product> addProductForm = formFactory.form(Product.class);
@@ -101,6 +103,7 @@ public class AdminProductCtrl extends Controller {
     }
 
     // Handle the form data when a new product is submitted
+    @Transactional
     public Result addProductSubmit() {
 
         String saveImageMsg;
@@ -122,8 +125,8 @@ public class AdminProductCtrl extends Controller {
         
         // Get category ids (checked boxes from form)
         // Find category objects and set categories list for this product
-        for (Long cat : newProduct.catSelect) {
-            newProduct.categories.add(Category.find.byId(cat));
+        for (Long cat : newProduct.getCatSelect()) {
+            newProduct.getCategories().add(Category.find.byId(cat));
         }
 
         // Update the new Product to save categories
@@ -134,17 +137,18 @@ public class AdminProductCtrl extends Controller {
         FilePart image = data.getFile("upload");
         
         // Save the image file
-        saveImageMsg = saveFile(newProduct.id, image);
+        saveImageMsg = saveFile(newProduct.getId(), image);
 
         // Set a success message in temporary flash
-        flash("success", "Product " + newProduct.name + " has been created" + " " + saveImageMsg);
+        flash("success", "Product " + newProduct.getName() + " has been created" + " " + saveImageMsg);
             
         // Redirect to the admin home
-        return redirect(routes.AdminProductCtrl.index());
+        return redirect(controllers.routes.AdminProductCtrl.index());
     }
         
     // Update a product by ID
     // called when edit button is pressed
+    @Transactional
     public Result updateProduct(Long id) {
         // Retrieve the product by id
         Product p = Product.find.byId(id);
@@ -157,6 +161,7 @@ public class AdminProductCtrl extends Controller {
 
 
     // Handle the form data when an updated product is submitted
+    @Transactional
     public Result updateProductSubmit(Long id) {
 
         String saveImageMsg;
@@ -173,15 +178,15 @@ public class AdminProductCtrl extends Controller {
         
         // Update the Product (using its ID to select the existing object))
         Product p = updateProductForm.get();
-        p.id = id;
+        p.setId(id);
         
         // Get category ids (checked boxes from form)
         // Find category objects and set categories list for this product
         List<Category> newCats = new ArrayList<Category>();
-        for (Long cat : p.catSelect) {
+        for (Long cat : p.getCatSelect()) {
             newCats.add(Category.find.byId(cat));
         }
-        p.categories = newCats;
+        p.setCategories(newCats);
         
         // update (save) this product            
         p.update();
@@ -190,17 +195,18 @@ public class AdminProductCtrl extends Controller {
         MultipartFormData data = request().body().asMultipartFormData();
         FilePart image = data.getFile("upload");
 
-        saveImageMsg = saveFile(p.id, image);
+        saveImageMsg = saveFile(p.getId(), image);
 
         // Add a success message to the flash session
-        flash("success", "Product " + updateProductForm.get().name + " has been updates" + " " + saveImageMsg);
+        flash("success", "Product " + updateProductForm.get().getName() + " has been updates" + " " + saveImageMsg);
             
         // Return to admin home
-        return redirect(routes.AdminProductCtrl.index());
+        return redirect(controllers.routes.AdminProductCtrl.index());
     }
 
 
     // Delete Product
+    @Transactional
     public Result deleteProduct(Long id) {
         // Call delete method
         Product.find.ref(id).delete();
